@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Генератор искового заявления</title>
+<style>
+  :root{--bg:#f4f6f9;--card:#fff;--ink:#1c2530;--muted:#64707d;--line:#d9dfe6;--accent:#0b5cad;--accent-ink:#fff;--warn:#fff6e0;--warn-line:#f0d089}
+  @media (prefers-color-scheme:dark){:root{--bg:#14181d;--card:#1d232a;--ink:#e8edf2;--muted:#9aa6b2;--line:#303942;--accent:#4a9de8;--accent-ink:#0a1420;--warn:#2e2812;--warn-line:#6b5a1f}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  header{padding:20px 16px 8px;max-width:1280px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  header p{margin:0;color:var(--muted)}
+  .wrap{max-width:1280px;margin:0 auto;padding:12px 16px 40px;display:grid;grid-template-columns:minmax(300px,400px) 1fr;gap:16px;align-items:start}
+  @media(max-width:860px){.wrap{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .card h2{font-size:15px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);font:inherit}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media(max-width:480px){.row3{grid-template-columns:1fr}}
+  .check{display:flex;gap:8px;align-items:flex-start;margin:10px 0 0;font-size:14px;color:var(--ink)}
+  .check input{width:auto;margin-top:4px}
+  details{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+  summary{cursor:pointer;font-weight:600}
+  .calc{margin-top:14px;padding:12px;border-radius:8px;background:var(--bg);border:1px dashed var(--line);font-size:14px}
+  .calc b{font-variant-numeric:tabular-nums}
+  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  button{padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+  button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+  button:hover{filter:brightness(1.06)}
+  .warn{background:var(--warn);border:1px solid var(--warn-line);border-radius:8px;padding:10px 12px;font-size:13px;margin-top:14px}
+  .err{color:#c0392b;font-size:13px;margin-top:6px;min-height:1em}
+  .paper-scroll{overflow:auto}
+  #paper{background:#fff;color:#000;width:100%;max-width:794px;margin:0 auto;padding:56px 64px;font:14pt/1.4 "Times New Roman",Times,serif;box-shadow:0 1px 8px rgba(0,0,0,.18);min-height:600px}
+  @media(max-width:600px){#paper{padding:24px 18px;font-size:12pt}}
+  #paper .head{margin-left:46%;margin-bottom:22px;font-size:13pt}
+  #paper .head p{margin:0 0 8px}
+  #paper h3{text-align:center;font-size:15pt;margin:22px 0 2px;letter-spacing:.03em}
+  #paper .sub{text-align:center;margin:0 0 18px;font-weight:bold}
+  #paper p.t{text-indent:1.25cm;text-align:justify;margin:0 0 8px}
+  #paper ol{margin:6px 0 10px;padding-left:1.5cm}
+  #paper .sign{display:flex;justify-content:space-between;margin-top:30px;gap:20px}
+  .ph{background:#fff3b0;padding:0 2px}
+  @media print{
+    body{background:#fff}
+    header,.form-col,.noprint{display:none!important}
+    .wrap{display:block;padding:0;max-width:none}
+    .card{border:0;padding:0;background:none}
+    #paper{box-shadow:none;max-width:none;padding:0;margin:0}
+    .ph{background:none}
+    @page{size:A4;margin:20mm 15mm 20mm 25mm}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Генератор искового заявления</h1>
+  <p>Гражданские суды Республики Казахстан · Истец: АО «Казахтелеком» · ГПК РК, ст. 148–149</p>
+</header>
+
+<div class="wrap">
+  <div class="form-col">
+    <div class="card">
+      <h2>Данные ответчика</h2>
+      <div class="row3">
+        <div><label for="ln">Фамилия *</label><input id="ln" autocomplete="off"></div>
+        <div><label for="fn">Имя *</label><input id="fn" autocomplete="off"></div>
+        <div><label for="mn">Отчество</label><input id="mn" autocomplete="off"></div>
+      </div>
+      <label for="sum">Сумма иска, тенге *</label>
+      <input id="sum" inputmode="decimal" placeholder="например 125 400,50">
+      <div class="err" id="err"></div>
+      <label for="court">Наименование суда *</label>
+      <input id="court" list="courts" placeholder="Начните вводить или выберите из списка">
+      <datalist id="courts">
+        <option value="Районный суд № 1 Бостандыкского района города Алматы">
+        <option value="Районный суд № 2 Алмалинского района города Алматы">
+        <option value="Районный суд № 2 района Алатау города Астаны">
+        <option value="Районный суд № 2 района Байконыр города Астаны">
+        <option value="Районный суд № 2 Сарыаркинского района города Астаны">
+        <option value="Районный суд № 2 города Усть-Каменогорска Восточно-Казахстанской области">
+        <option value="Районный суд № 2 города Караганды">
+        <option value="Районный суд № 2 города Шымкента">
+        <option value="Специализированный межрайонный экономический суд города Астаны">
+        <option value="Специализированный межрайонный экономический суд города Алматы">
+      </datalist>
+
+      <label for="acc">Лицевой счёт / № договора</label>
+      <input id="acc" autocomplete="off" placeholder="например 1234567890">
+      <label>Период пользования услугами связи</label>
+      <div class="row">
+        <div><label for="pf" style="margin-top:0">с</label><input id="pf" type="date"></div>
+        <div><label for="pt" style="margin-top:0">по</label><input id="pt" type="date"></div>
+      </div>
+
+      <details>
+        <summary>Дополнительно (необязательно)</summary>
+        <div class="row">
+          <div><label for="iin">ИИН ответчика</label><input id="iin" inputmode="numeric" maxlength="12"></div>
+          <div><label for="addr">Адрес ответчика</label><input id="addr"></div>
+        </div>
+        <label for="svc">Вид услуг</label>
+        <select id="svc">
+          <option value="услуги связи">услуги связи</option>
+          <option value="услуги доступа к сети Интернет">услуги доступа к сети Интернет</option>
+          <option value="услуги телефонной связи">услуги телефонной связи</option>
+          <option value="телекоммуникационные услуги">телекоммуникационные услуги</option>
+        </select>
+        <div class="check"><input type="checkbox" id="pre" checked><label for="pre" style="margin:0;color:inherit">Направлялось досудебное уведомление (претензия) ответчику</label></div>
+        <div class="check"><input type="checkbox" id="date1" checked><label for="date1" style="margin:0;color:inherit">Проставить сегодняшнюю дату</label></div>
+      </details>
+
+      <div class="calc" id="calc">Введите сумму иска — здесь появится расчёт государственной пошлины.</div>
+
+      <div class="btns">
+        <button class="primary" id="bPrint">Печать / PDF</button>
+        <button id="bDoc">Скачать .doc</button>
+        <button id="bCopy">Копировать текст</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>Реквизиты истца (постоянные)</h2>
+      <p style="margin:0 0 6px;color:var(--muted);font-size:13px">Заполните один раз — сохраняются в этом браузере.</p>
+      <label for="pName">Наименование</label><input id="pName" value="Акционерное общество «Казахтелеком» (АО «Казахтелеком»)">
+      <div class="row">
+        <div><label for="pBin">БИН</label><input id="pBin" placeholder="укажите БИН"></div>
+        <div><label for="pPhone">Телефон</label><input id="pPhone" placeholder="укажите телефон"></div>
+      </div>
+      <label for="pAddr">Юридический адрес</label><input id="pAddr" placeholder="укажите адрес">
+      <label for="pBank">Банковские реквизиты (ИИК, банк, БИК)</label><input id="pBank" placeholder="ИИК KZ…, банк, БИК">
+      <label for="pRep">Представитель (должность, ФИО)</label><input id="pRep" placeholder="например: юрисконсульт Иванов И.И.">
+      <label for="pDoc">Основание полномочий представителя</label><input id="pDoc" placeholder="доверенность № … от …">
+      <label for="rate">Ставка госпошлины, % от суммы иска (для юр. лиц)</label><input id="rate" value="3" inputmode="decimal">
+      <div class="warn">Ставка 3% — для имущественных исков юридических лиц по Налоговому кодексу РК. Проверьте актуальную ставку на дату подачи; при необходимости измените здесь.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Предпросмотр документа</h2>
+    <div class="paper-scroll"><div id="paper"></div></div>
+    <div class="warn noprint">Документ — черновик. Перед подачей проверьте факты, расчёт, подсудность и перечень приложений (ст. 149 ГПК РК): квитанция об уплате госпошлины, доверенность, копии иска по числу ответчиков, доказательства задолженности, документ о направлении копий ответчику, документы о досудебном порядке. Проверьте также, не подлежит ли требование рассмотрению в приказном производстве (глава 12 ГПК РК).</div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ph = (v, hint) => v ? esc(v) : '<span class="ph">' + esc(hint) + '</span>';
+
+/* ---------- сумма прописью ---------- */
+const ONES_M = ['','один','два','три','четыре','пять','шесть','семь','восемь','девять'];
+const ONES_F = ['','одна','две','три','четыре','пять','шесть','семь','восемь','девять'];
+const TEENS = ['десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'];
+const TENS = ['','','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'];
+const HUND = ['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+function plural(n, f){ const a = n % 100, b = n % 10; if (a > 10 && a < 20) return f[2]; if (b === 1) return f[0]; if (b >= 2 && b <= 4) return f[1]; return f[2]; }
+function triad(n, fem){
+  const o = fem ? ONES_F : ONES_M, w = [];
+  w.push(HUND[Math.floor(n / 100)]);
+  const r = n % 100;
+  if (r >= 10 && r < 20) w.push(TEENS[r - 10]);
+  else { w.push(TENS[Math.floor(r / 10)]); w.push(o[r % 10]); }
+  return w.filter(Boolean).join(' ');
+}
+function intWords(n){
+  if (n === 0) return 'ноль';
+  const groups = [
+    {f:['миллиард','миллиарда','миллиардов'], fem:false, v: Math.floor(n / 1e9) % 1000},
+    {f:['миллион','миллиона','миллионов'], fem:false, v: Math.floor(n / 1e6) % 1000},
+    {f:['тысяча','тысячи','тысяч'], fem:true, v: Math.floor(n / 1e3) % 1000},
+    {f:null, fem:false, v: n % 1000}
+  ];
+  const out = [];
+  for (const g of groups){
+    if (!g.v) continue;
+    out.push(triad(g.v, g.fem));
+    if (g.f) out.push(plural(g.v, g.f));
+  }
+  return out.join(' ');
+}
+function parseSum(s){
+  const t = String(s).replace(/[\s\u00a0\u202f]/g, '').replace(',', '.');
+  if (!/^\d+(\.\d{1,2})?$/.test(t)) return null;
+  const v = Math.round(parseFloat(t) * 100);
+  return v > 0 ? v : null; // в тиынах
+}
+function money(tiyn){
+  const t = Math.floor(tiyn / 100), c = tiyn % 100;
+  const num = t.toLocaleString('ru-RU').replace(/\u00a0|\u202f/g, ' ');
+  return c ? num + ',' + String(c).padStart(2, '0') : num;
+}
+function moneyWords(tiyn){
+  const t = Math.floor(tiyn / 100), c = tiyn % 100;
+  const w = intWords(t);
+  let s = w.charAt(0).toUpperCase() + w.slice(1) + ' ' + plural(t, ['тенге','тенге','тенге']);
+  if (c) s += ' ' + String(c).padStart(2, '0') + ' ' + plural(c, ['тиын','тиына','тиын']);
+  return s;
+}
+function fmtDate(iso){ if(!iso) return ''; const [y,m,d] = iso.split('-'); return d + '.' + m + '.' + y; }
+function todayRu(){
+  const d = new Date();
+  const mon = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  return '«' + String(d.getDate()).padStart(2,'0') + '» ' + mon[d.getMonth()] + ' ' + d.getFullYear() + ' года';
+}
+
+/* ---------- состояние ---------- */
+const SAVE = ['pName','pBin','pPhone','pAddr','pBank','pRep','pDoc','rate'];
+SAVE.forEach(id => { try { const v = localStorage.getItem('isk_' + id); if (v !== null) $(id).value = v; } catch(e){} });
+
+function state(){
+  const sumT = parseSum($('sum').value);
+  const rate = parseFloat(String($('rate').value).replace(',', '.')) || 0;
+  const fee = sumT ? Math.round(sumT / 100 * rate / 100) : 0; // тенге
+  return { sumT, rate, fee };
+}
+
+function fullName(){ return [$('ln').value, $('fn').value, $('mn').value].map(s => s.trim()).filter(Boolean).join(' '); }
+
+function build(){
+  const { sumT, rate, fee } = state();
+  const name = fullName();
+  const court = $('court').value.trim();
+  const sumTxt = sumT ? money(sumT) + ' (' + moneyWords(sumT).toLowerCase() + ')' : null;
+  const feeTxt = sumT ? money(fee * 100) + ' (' + moneyWords(fee * 100).toLowerCase() + ')' : null;
+  const pf = fmtDate($('pf').value), pt = fmtDate($('pt').value);
+  const period = pf && pt ? 'за период с ' + pf + ' по ' + pt : (pf ? 'начиная с ' + pf : (pt ? 'по ' + pt : 'за период ______________'));
+  const svc = $('svc').value;
+  const acc = $('acc').value.trim();
+  const accTxt = acc ? ' (лицевой счёт / договор № ' + esc(acc) + ')' : ' (лицевой счёт / договор № ______)';
+  const pre = $('pre').checked;
+  const date = $('date1').checked ? todayRu() : '«___» __________ 20__ года';
+
+  const pBin = $('pBin').value.trim(), pAddr = $('pAddr').value.trim(), pPhone = $('pPhone').value.trim(), pBank = $('pBank').value.trim();
+  const rep = $('pRep').value.trim(), doc = $('pDoc').value.trim();
+
+  const plaintiffBlock =
+    '<p><b>Истец:</b> ' + esc($('pName').value) +
+    (pBin ? ', БИН ' + esc(pBin) : ', БИН <span class="ph">______</span>') +
+    ', ' + ph(pAddr, 'юридический адрес') +
+    (pPhone ? ', тел. ' + esc(pPhone) : '') +
+    (pBank ? ', ' + esc(pBank) : '') + '</p>' +
+    '<p><b>Представитель истца:</b> ' + ph(rep, 'должность, ФИО') + (doc ? ', действует на основании ' + esc(doc) : '') + '</p>';
+
+  const defBlock =
+    '<p><b>Ответчик:</b> ' + ph(name, 'Ф.И.О. ответчика') +
+    ($('iin').value.trim() ? ', ИИН ' + esc($('iin').value.trim()) : '') +
+    ($('addr').value.trim() ? ', проживающий(ая) по адресу: ' + esc($('addr').value.trim()) : '') + '</p>';
+
+  const priceBlock =
+    '<p><b>Лицевой счёт / договор №:</b> ' + ph(acc, 'лицевой счёт') + '</p>' +
+    '<p><b>Период пользования услугами:</b> ' + (pf || pt ? esc(pf || '…') + ' — ' + esc(pt || '…') : '<span class="ph">период</span>') + '</p>' +
+    '<p><b>Цена иска:</b> ' + ph(sumT ? money(sumT) + ' тенге' : '', 'сумма иска') + '</p>' +
+    '<p><b>Государственная пошлина:</b> ' + (sumT ? money(fee * 100) + ' тенге' : '<span class="ph">расчёт после ввода суммы</span>') + '</p>';
+
+  const html =
+    '<div class="head"><p><b>В</b> ' + ph(court, 'наименование суда') + '</p>' +
+    plaintiffBlock + defBlock + priceBlock + '</div>' +
+    '<h3>ИСКОВОЕ ЗАЯВЛЕНИЕ</h3>' +
+    '<p class="sub">о взыскании задолженности за ' + esc(svc) + '</p>' +
+
+    '<p class="t">' + esc($('pName').value) + ' (далее — Истец) оказывает ' + esc(svc) + ' на территории Республики Казахстан в соответствии с Законом Республики Казахстан «О связи» и заключёнными с абонентами договорами.</p>' +
+
+    '<p class="t">Ответчик ' + ph(name, 'Ф.И.О.') + ' (далее — Ответчик) является абонентом Истца' + accTxt + ' и пользовался ' + esc(svc) + ' ' + period + '. Истец исполнил свои обязательства надлежащим образом, услуги предоставлены Ответчику в полном объёме.</p>' +
+
+    '<p class="t">В нарушение условий договора и требований статьи 272 Гражданского кодекса Республики Казахстан, согласно которой обязательства должны исполняться надлежащим образом, Ответчик не оплатил оказанные услуги. Задолженность Ответчика перед Истцом составляет <b>' + (sumTxt ? sumTxt + ' тенге' : '<span class="ph">сумма иска</span>') + '</b>.</p>' +
+
+    (pre
+      ? '<p class="t">Истцом в адрес Ответчика направлялось уведомление о наличии задолженности и необходимости её погашения. До настоящего времени задолженность Ответчиком не погашена, требования Истца оставлены без удовлетворения.</p>'
+      : '<p class="t">Обязательный досудебный порядок урегулирования спора по данной категории дел законом не установлен.</p>') +
+
+    '<p class="t">В соответствии со статьёй 9 Гражданского кодекса Республики Казахстан защита гражданских прав осуществляется, в том числе, путём взыскания с должника денежных средств. Расходы Истца по уплате государственной пошлины подлежат возмещению Ответчиком в соответствии с Гражданским процессуальным кодексом Республики Казахстан.</p>' +
+
+    '<p class="t">На основании изложенного, руководствуясь статьями 148, 149 Гражданского процессуального кодекса Республики Казахстан,</p>' +
+    '<p class="sub" style="margin:10px 0">ПРОШУ:</p>' +
+    '<ol><li>Принять настоящее исковое заявление к производству суда.</li>' +
+    '<li>Взыскать с Ответчика ' + ph(name, 'Ф.И.О.') + ' в пользу ' + esc($('pName').value) + ' задолженность за ' + esc(svc) + ' в размере ' + (sumT ? money(sumT) + ' тенге' : '<span class="ph">сумма иска</span>') + '.</li>' +
+    '<li>Взыскать с Ответчика в пользу Истца судебные расходы по оплате государственной пошлины в размере ' + (sumT ? money(fee * 100) + ' тенге' : '<span class="ph">сумма пошлины</span>') + '.</li></ol>' +
+
+    '<p><b>Приложения:</b></p><ol>' +
+    '<li>Документ, подтверждающий уплату государственной пошлины (' + (sumT ? money(fee * 100) + ' тенге' : '____') + ').</li>' +
+    '<li>Доверенность (документ, подтверждающий полномочия представителя Истца).</li>' +
+    '<li>Расчёт (выписка) задолженности по лицевому счёту Ответчика.</li>' +
+    '<li>Копия договора / документ, подтверждающий оказание услуг.</li>' +
+    (pre ? '<li>Документы, подтверждающие направление Ответчику уведомления о задолженности.</li>' : '') +
+    '<li>Документ, подтверждающий направление Ответчику копии искового заявления и приложенных документов.</li>' +
+    '<li>Копия искового заявления с приложениями для Ответчика.</li></ol>' +
+
+    '<div class="sign"><span>' + date + '</span><span>Представитель Истца ____________ / ' + ph(rep, 'ФИО') + ' /</span></div>';
+
+  $('paper').innerHTML = html;
+
+  // расчёт
+  if (sumT){
+    $('calc').innerHTML =
+      'Сумма иска: <b>' + money(sumT) + ' ₸</b><br>' +
+      'Госпошлина (' + String(rate).replace('.', ',') + '%): <b>' + money(fee * 100) + ' ₸</b><br>' +
+      '<span style="color:var(--muted)">Сумма прописью: ' + esc(moneyWords(sumT)) + '</span>';
+  } else {
+    $('calc').textContent = 'Введите сумму иска — здесь появится расчёт государственной пошлины.';
+  }
+  const raw = $('sum').value.trim();
+  $('err').textContent = raw && !sumT ? 'Введите положительное число, не более двух знаков после запятой' : '';
+}
+
+['ln','fn','mn','sum','court','iin','acc','addr','pf','pt','svc','pre','date1',...SAVE].forEach(id => {
+  $(id).addEventListener('input', () => {
+    if (SAVE.includes(id)) { try { localStorage.setItem('isk_' + id, $(id).value); } catch(e){} }
+    build();
+  });
+  $(id).addEventListener('change', build);
+});
+
+function plainText(){
+  const clone = $('paper').cloneNode(true);
+  clone.querySelectorAll('.sign,.head p,.head').forEach(()=>{});
+  return clone.innerText.replace(/\n{3,}/g, '\n\n');
+}
+function checkReady(){
+  const miss = [];
+  if (!$('ln').value.trim()) miss.push('фамилия');
+  if (!$('fn').value.trim()) miss.push('имя');
+  if (!state().sumT) miss.push('сумма иска');
+  if (!$('court').value.trim()) miss.push('суд');
+  return miss;
+}
+$('bPrint').onclick = () => {
+  const m = checkReady();
+  if (m.length && !confirm('Не заполнено: ' + m.join(', ') + '. Всё равно печатать?')) return;
+  window.print();
+};
+$('bDoc').onclick = () => {
+  const m = checkReady();
+  if (m.length && !confirm('Не заполнено: ' + m.join(', ') + '. Всё равно скачать?')) return;
+  const css = 'body{font-family:"Times New Roman",serif;font-size:14pt;line-height:1.4}.head{margin-left:46%}h3{text-align:center}.sub{text-align:center;font-weight:bold}p.t{text-indent:1.25cm;text-align:justify}.ph{background:#ffff99}';
+  const html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><style>' + css + '</style></head><body>' + $('paper').innerHTML + '</body></html>';
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  const a = document.createElement('a');
+  const nm = (fullName() || 'ответчик').replace(/[^\p{L}\p{N}]+/gu, '_');
+  a.href = URL.createObjectURL(blob); a.download = 'Иск_' + nm + '.doc';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+};
+$('bCopy').onclick = async () => {
+  try { await navigator.clipboard.writeText(plainText()); $('bCopy').textContent = 'Скопировано ✓'; }
+  catch(e){ const r = document.createRange(); r.selectNodeContents($('paper')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $('bCopy').textContent = 'Выделено — нажмите Ctrl+C'; }
+  setTimeout(() => $('bCopy').textContent = 'Копировать текст', 2200);
+};
+
+build();
+</script>
+</body>
+</html>
